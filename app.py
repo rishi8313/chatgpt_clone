@@ -22,6 +22,9 @@ st.markdown("""
     .chat-container:active {
         background-color: #d0d0d0;
     }
+    .stTextInput > label {
+        display: none;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -33,14 +36,18 @@ def main():
         st.session_state['chats'] = {}
         st.session_state['current_chat'] = None
 
-    if st.sidebar.button("➕ New Chat"):
-        new_chat_id = len(st.session_state['chats']) + 1
-        chat_key = f"Chat {new_chat_id}"
-        st.session_state['chats'][chat_key] = []
-        st.session_state['current_chat'] = chat_key
-        st.rerun()
-
-    search_query = st.sidebar.text_input("", placeholder="🔍 Search chats")
+    with st.sidebar.container():
+        col1, col2 = st.columns([0.8, 0.2])
+        with col2:
+            if st.button("➕"):
+                new_chat_id = len(st.session_state['chats']) + 1
+                chat_key = f"Chat {new_chat_id}"
+                st.session_state['chats'][chat_key] = []
+                st.session_state['current_chat'] = chat_key
+                st.rerun()
+        with col1:
+            search_query = st.text_input("", placeholder="🔍")
+    
     if search_query:
         search_results = [chat for chat in st.session_state['chats'].keys() if search_query.lower() in chat.lower()]
     else:
